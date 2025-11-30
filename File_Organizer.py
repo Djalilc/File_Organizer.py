@@ -22,16 +22,11 @@
 from tkinter import Tk, filedialog
 from pathlib import Path
 
-Tk().withdraw() # hides the little Tk window
-folder_path = filedialog.askdirectory() # opens the folder picker
+Tk().withdraw()  # hides the Tk window
+folder_path = filedialog.askdirectory()
 print(folder_path)
 
-#folder path right now is just a text string its not a folder so it can't list files move them create folders etc.
-#it needs something smarter
-#path object is a part of the pathlib module 
-#pythongs way of recognizing an acutal folder which you can perform tasks on
-
-path = Path(folder_path) #converts the string into a path object that python can perform operations on 
+path = Path(folder_path)
 
 images = [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tiff", ".webp", ".svg"]
 Documents = [".pdf", ".doc", ".docx", ".txt", ".rtf", ".odt", ".md"]
@@ -45,11 +40,36 @@ archives = [".zip", ".rar", ".7z", ".tar", ".gz", ".bz2"]
 executables = [".exe", ".msi", ".bat", ".sh", ".app"]
 other = [".iso", ".bin", ".bak", ".tmp"]
 
+categories = {
+    "images": images,
+    "Documents": Documents,
+    "spreadsheets": spreadsheets,
+    "presentations": presentations,
+    "scripts": scripts,
+    "DataFormats": DataFormats,
+    "Audio": Audio,
+    "video": video,
+    "archives": archives,
+    "executables": executables,
+    "other": other
+}
 
 for item in path.iterdir():
-    ext = item.suffix.lower()
-    if item.is_file(): 
+    if item.is_file():                     # Only work on files
+        ext = item.suffix.lower()
         print("Extension:", ext)
 
-#create four lists and iterate through each one to find out if it belongs to that list and if it doesnt then move onto the next list
+        for folder_name, ext_List in categories.items():
+
+            if ext in ext_List:            # Found matching category
+
+                # Create folder (if not exists)
+                new_folder = path / folder_name
+                new_folder.mkdir(exist_ok=True)
+
+                # Move file into that folder
+                destination = new_folder / item.name
+                item.rename(destination)
+
+                break  # stop looping categories once matched
 
