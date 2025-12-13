@@ -2,8 +2,7 @@
 File Organizer – Micro Project 1
 --------------------------------
 This script automatically sorts files in a selected directory into category
-folders based on their file extension. The goal is to build real engineering
-discipline: clean structure, clear categories, robust handling of edge cases,
+folders based on their file extension. The goal is to build: clean structure, clear categories, robust handling of edge cases,
 and extensible design.
 
 Key Concepts Practised:
@@ -41,22 +40,22 @@ Executables = [".exe", ".msi", ".bat", ".sh", ".app"]
 Other = [".iso", ".bin", ".bak", ".tmp"]
 
 categories = {
-    "images": Images,
+    "Images": Images,
     "Documents": Documents,
-    "spreadsheets": Spreadsheets,
-    "presentations": Presentations,
-    "scripts": Scripts,
+    "Spreadsheets": Spreadsheets,
+    "Presentations": Presentations,
+    "Scripts": Scripts,
     "DataFormats": DataFormats,
     "Audio": Audio,
-    "video": Video,
-    "archives": Archives,
-    "executables": Executables,
-    "other": Other
+    "Video": Video,
+    "Archives": Archives,
+    "Executables": Executables,
+    "Other": Other
 }
 
 for item in path.iterdir():
     if item.is_file():             # Only work on files
-        ext = item.suffix.lower()
+        ext = item.suffix.lower() 
         print("Extension:", ext)
 
         for folder_name, ext_List in categories.items():
@@ -64,12 +63,15 @@ for item in path.iterdir():
             if ext in ext_List:    # Found matching category
 
                 # Create folder (if not exists)
-                new_folder = path / folder_name
-                new_folder.mkdir(exist_ok=True)
+                new_folder = path / folder_name  #pythonic way to join the path with the current folder_name (new_folder = path.joinpath(folder(name))
+                new_folder.mkdir(exist_ok=True) #make the new_folder exist 
 
                 # Move file into that folder
-                destination = new_folder / item.name
-                item.rename(destination)
+                destination = new_folder / item.name #build the intended target path
+                if destination.exists(): #is there alr a file called photo.png 
+                    destination = new_folder / f"{item.stem}_copy{item.suffix}"
+                    item.rename(destination)
+
 
                 break  # stop looping categories once matched
 
